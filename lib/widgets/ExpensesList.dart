@@ -1,7 +1,7 @@
-import 'package:expense_tracker/expense.dart';
+import 'package:expense_tracker/Expenses.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/models/expense_model.dart';
-import 'package:expense_tracker/widgets/expenses_items.dart';
+import 'package:expense_tracker/models/Expense.dart';
+import 'package:expense_tracker/widgets/ExpensesItems.dart';
 
 class ExpensesList extends StatelessWidget {                                      // thsi class is built for the output of the dummy data created in expenses class
   const ExpensesList({super.key, required this.expenses});

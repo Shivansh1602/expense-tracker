@@ -1,7 +1,18 @@
+import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';//package to generate unique id's
+import 'package:intl/intl.dart';//used to get date package
+
+final formatter=DateFormat.yMd();//used  to store year month date from intl package 
 
 const  uuid=Uuid();              //uuid package import kia phir variable mein store krdia 
 enum  Category{food,travel,leisure,work}
+
+const categoryIcons={   //this is created to store icons value for each of the above enum category respectively using maps
+Category.food:Icons.lunch_dining,
+Category.travel:Icons.flight_takeoff,
+Category.leisure:Icons.movie,
+Category.work:Icons.work,
+};
 
 class Expense{
 
@@ -18,5 +29,10 @@ Expense({
   final DateTime date;
   final String title;
   final Category category;
+
+  String get formattedDate{ 
+    return formatter.format(date);// this getter is made to get a date in more human readable form 
+
+  }
 
 }
