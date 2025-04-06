@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/models/Expense.dart';
 
 class Newexpense extends StatefulWidget {
-  const Newexpense({super.key});
+  const Newexpense({super.key, required this.onAddExpense});
+
+  final void Function(Expense expense) onAddExpense;
 
   @override
   State<Newexpense> createState() => _NewExpenseState();
@@ -12,14 +14,10 @@ class _NewExpenseState extends State<Newexpense> {
   final _titleController = TextEditingController(); // stores data
   final _amountController = TextEditingController(); //same
 
-  DateTime?
-  _selectedDate; // this variable is built to store the value of the date showDatePicker function in dart that alows the use of calender in the function _presentDatePicker function built by us
-  Category _selectedCategory =
-      Category
-          .food; // this variable is used to store the value of category in dropdownmenu button and it is set to leisure temporarily and initially
+  DateTime?  _selectedDate; // this variable is built to store the value of the date showDatePicker function in dart that alows the use of calender in the function _presentDatePicker function built by us
+  Category _selectedCategory = Category.food; // this variable is used to store the value of category in dropdownmenu button and it is set to leisure temporarily and initially
 
-  void _presentDatePicker() async {
-    // method to get date from the user , async and await are provided by dart which gets the value of date which of data type future
+  void _presentDatePicker() async {    // method to get date from the user , async and await are provided by dart which gets the value of date which of data type future
     final now = DateTime.now();
     final firstDate = DateTime(now.year - 1, now.month, now.day);
     final pickedDate = await showDatePicker(
@@ -30,8 +28,7 @@ class _NewExpenseState extends State<Newexpense> {
       lastDate: now,
     );
     setState(() {
-      _selectedDate =
-          pickedDate; // here the value of date is stored in _selected state variable
+      _selectedDate = pickedDate; // here the value of date is stored in _selected state variable
     });
   }
 
@@ -43,23 +40,18 @@ class _NewExpenseState extends State<Newexpense> {
   void _submitExpenseData() {
     // this function is created for presenting an error message if the data is empty and user submit the expense
 
-    final enteredAmount = double.tryParse(
-      _amountController.text,
-    ); //try parse creates a string to double for eg. ('hello')=>null, ('11.2')=>11.2
+    final enteredAmount = double.tryParse( _amountController.text,); //try parse creates a string to double for eg. ('hello')=>null, ('11.2')=>11.2
 
     final amountIsInvalid =
         enteredAmount == null || enteredAmount <= 0; //boolean value
 
-    if (_titleController.text.trim().isEmpty ||
-        amountIsInvalid ||
-        _selectedDate ==
-            null) // text,trim.is empty are in built dart functions ,
+    if (_titleController.text.trim().isEmpty || amountIsInvalid || _selectedDate == null) // text,trim.is empty are in built dart functions ,
     {
       showDialog(
         context: context,
         builder:
             (ctx) => AlertDialog(
-              title: Text('Invalid Inpiut'),
+              title: Text('Invalid Input'),
               content: Text(
                 'Please make sure a valid title,amount, date and category was enetered.',
               ),
@@ -75,7 +67,16 @@ class _NewExpenseState extends State<Newexpense> {
       );
       return;
     }
-  } 
+    widget.onAddExpense(
+      Expense(
+        amount: enteredAmount,
+        date: _selectedDate!,
+        title: _titleController.text,
+        category: _selectedCategory,
+      ),
+    );
+    Navigator.pop(context);
+  }
 
   @override
   void dispose() {
@@ -87,7 +88,7 @@ class _NewExpenseState extends State<Newexpense> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16,48,16,16),
       child: Column(
         children: [
           // Title Input
