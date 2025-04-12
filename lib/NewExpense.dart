@@ -87,100 +87,104 @@ class _NewExpenseState extends State<Newexpense> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16,48,16,16),
-      child: Column(
-        children: [
-          // Title Input
-          TextField(
-            controller: _titleController, // coontroller stores data
-            maxLength: 50,
-            decoration: const InputDecoration(labelText: 'Title'),
-          ),
-
-          const SizedBox(height: 16),
-
-          // Amount & Date Row
-          Row(
+    final keyboardspace=MediaQuery.of(context).viewInsets.bottom;
+    return SizedBox(height: double.infinity ,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding:  EdgeInsets.fromLTRB(16,48,16,keyboardspace+16),
+          child: Column(
             children: [
-              // Amount Input
-              Expanded(
-                child: TextField(
-                  controller: _amountController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    prefixText: '\$ ',
-                    labelText: 'Amount',
-                  ),
-                ),
+              // Title Input
+              TextField(
+                controller: _titleController, // coontroller stores data
+                maxLength: 50,
+                decoration: const InputDecoration(labelText: 'Title'),
               ),
-              const SizedBox(width: 16), // Space between fields
-              // Date Picker Section
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      _selectedDate == null
-                          ? 'No date selected'
-                          : formatter.format(_selectedDate!),
-                    ), // the _selectedDate variable is used to show the date which was stored by using await and sync in pickeddate variable ,, this line of cod4 basically suggests that if the value of the date is null then show no date picked else show the formatted date which is picked by the user and the formatted fucntion is used to present the date in mor human readable form
-                    IconButton(
-                      onPressed: _presentDatePicker,
-                      icon: const Icon(Icons.calendar_month),
+        
+              const SizedBox(height: 16),
+        
+              // Amount & Date Row
+              Row(
+                children: [
+                  // Amount Input
+                  Expanded(
+                    child: TextField(
+                      controller: _amountController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        prefixText: '\$ ',
+                        labelText: 'Amount',
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 16), // Space between fields
+                  // Date Picker Section
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          _selectedDate == null
+                              ? 'No date selected'
+                              : formatter.format(_selectedDate!),
+                        ), // the _selectedDate variable is used to show the date which was stored by using await and sync in pickeddate variable ,, this line of cod4 basically suggests that if the value of the date is null then show no date picked else show the formatted date which is picked by the user and the formatted fucntion is used to present the date in mor human readable form
+                        IconButton(
+                          onPressed: _presentDatePicker,
+                          icon: const Icon(Icons.calendar_month),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+        
+              const SizedBox(height: 16), // Space before buttons
+              // Buttons Aligned Right
+              Row(
+                children: [
+                  DropdownButton(
+                    // dropdown button storing enum values
+                    value:
+                        _selectedCategory, // this shows the stored selected  value of Category on the drop down button
+                    items:
+                        Category.values
+                            .map(
+                              (category) => DropdownMenuItem(
+                                value: category,
+                                child: Text(category.name.toUpperCase()),
+                              ),
+                            )
+                            .toList(),
+        
+                    onChanged: (value) {
+                      if (value == null) {
+                        return;
+                      }
+                      setState(() {
+                        _selectedCategory = value;
+                      });
+                    },
+                  ),
+                  const Spacer(),
+        
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      _submitExpenseData(); // this function is for displaying the user inpiut data on the home screen widgets
+                    },
+                    child: const Text('Save Expense'),
+                  ),
+                ],
               ),
             ],
           ),
-
-          const SizedBox(height: 16), // Space before buttons
-          // Buttons Aligned Right
-          Row(
-            children: [
-              DropdownButton(
-                // dropdown button storing enum values
-                value:
-                    _selectedCategory, // this shows the stored selected  value of Category on the drop down button
-                items:
-                    Category.values
-                        .map(
-                          (category) => DropdownMenuItem(
-                            value: category,
-                            child: Text(category.name.toUpperCase()),
-                          ),
-                        )
-                        .toList(),
-
-                onChanged: (value) {
-                  if (value == null) {
-                    return;
-                  }
-                  setState(() {
-                    _selectedCategory = value;
-                  });
-                  ;
-                },
-              ),
-              const Spacer(),
-
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  _submitExpenseData(); // this function is for displaying the user inpiut data on the home screen widgets
-                },
-                child: const Text('Save Expense'),
-              ),
-            ],
-          ),
-        ],
+        ),
       ),
     );
   }

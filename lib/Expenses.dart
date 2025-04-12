@@ -13,17 +13,18 @@ class Expenses extends StatefulWidget {
 }
 
 // dummy data create krhe hai using expense class and storing it in a variable of type list<expense>
-final List<Expense> registered_expense = [
-  //this variable of type List<Expense> is created to store dummy data
+final List<Expense> registered_expense = [    ];          //this variable of type List<Expense> was created to store dummy data
+
  
-];
 
 
 
 
 class _ExpensesState extends State<Expenses> {
   void openAddExpense() {
+    
     showModalBottomSheet(
+      useSafeArea: true,
       isScrollControlled: true,
       context: context,
       builder: (ctx) => Newexpense(onAddExpense: _addExpense,),
@@ -68,6 +69,9 @@ final expenseIndex=registered_expense.indexOf(expense); // expenseIndex variable
 
   @override
   Widget build(BuildContext context) {
+
+   final width= MediaQuery.of(context).size.width;
+
   
   Widget mainContent=Center(child: Text('No expenses, start adding some!'),);           //creating this to show a message if there is no expense present on the main screen
 
@@ -82,7 +86,7 @@ final expenseIndex=registered_expense.indexOf(expense); // expenseIndex variable
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter Expense Tracker'),
+        title: Text('Expense Tracker'),
         actions: [
           IconButton(
             onPressed: () {
@@ -92,13 +96,19 @@ final expenseIndex=registered_expense.indexOf(expense); // expenseIndex variable
           ),
         ],
       ),
-      body: Column(
+      body: width<600?Column(
         children: [
           Chart(expenses:registered_expense),
           Expanded(child:mainContent,  //passing the content 
             ),
         ],
-      ),
+      ):
+      Row(
+        children: [
+       Expanded(child: Chart(expenses:registered_expense)),
+          Expanded(child:mainContent,)
+        ],
+      )
     );
   }
 }
